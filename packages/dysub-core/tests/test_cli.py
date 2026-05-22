@@ -40,7 +40,7 @@ class TestProcess:
         monkeypatch.chdir(tmp_path)
         result = runner.invoke(app, ["process", str(SAMPLE_MP4)])
         assert result.exit_code == 1
-        assert "API key is required" in result.output
+        assert "ASR API Key" in result.output
 
     def test_invalid_format(self) -> None:
         result = runner.invoke(

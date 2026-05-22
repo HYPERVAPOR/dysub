@@ -11,7 +11,7 @@ import typer
 from rich.console import Console
 from rich.progress import Progress
 
-from dysub_core.config import Settings
+from dysub_core.config import DEFAULT_ENV_PATH, Settings, ensure_config_dir
 from dysub_core.inputs.registry import discover_inputs, get_input_for_source
 from dysub_core.models import InvalidAPIKey, TaskConfig
 from dysub_core.pipeline import Pipeline
@@ -25,9 +25,26 @@ def _require_key(explicit: str | None) -> str:
     key = explicit or settings.asr_api_key or os.getenv("DYSUB_ASR_API_KEY", "")
     if not key:
         console.print(
-            "[red]Error:[/red] ASR API key is required.\n"
-            "Set it via --api-key, ~/.config/dysub/.env, "
-            "or the DYSUB_ASR_API_KEY environment variable."
+            "[red bold]Error:[/red bold] ASR API Key 未配置\n"
+            "\n"
+            "DySub 需要调用第三方 ASR 服务（语音转文字）。\n"
+            "推荐阿里百炼（DashScope），新用户有免费额度：\n"
+            "  [blue]https://bailian.console.aliyun.com/[/blue]\n"
+            "\n"
+            "获取 API Key 后，选择以下任一方式配置：\n"
+            "\n"
+            "[cyan]1. 命令行参数（临时）[/cyan]\n"
+            "   dysub process ./video.mp4 --api-key sk-xxxxx\n"
+            "\n"
+            "[cyan]2. 环境变量[/cyan]\n"
+            "   export DYSUB_ASR_API_KEY=sk-xxxxx\n"
+            "   export DYSUB_ASR_BASE_URL=https://dashscope.aliyuncs.com/api/v1\n"
+            "\n"
+            "[cyan]3. 配置文件（推荐）[/cyan]\n"
+            "   mkdir -p ~/.config/dysub\n"
+            "   echo 'DYSUB_ASR_API_KEY=sk-xxxxx' > ~/.config/dysub/.env\n"
+            "\n"
+            "你也可以运行 [green]dysub doctor --init[/green] 交互式创建配置文件。"
         )
         raise typer.Exit(1)
     return key
@@ -91,7 +108,11 @@ def process(
 
 
 @app.command()
-def doctor() -> None:
+def doctor(
+    init: bool = typer.Option(
+        False, "--init", help="Interactive setup: create ~/.config/dysub/.env"
+    ),
+) -> None:
     """Check system configuration and dependencies."""
     issues: list[str] = []
 
@@ -125,9 +146,74 @@ def doctor() -> None:
         console.print()
         for issue in issues:
             console.print(f"[red]✗[/red] {issue}")
+
+    # Interactive init mode
+    if init:
+        console.print()
+        _interactive_init(settings)
+        return
+
+    if issues:
+        console.print()
+        console.print("Run [green]dysub doctor --init[/green] to create config file interactively.")
         raise typer.Exit(1)
 
     console.print("[green]All checks passed![/green]")
+
+
+def _interactive_init(settings: Settings) -> None:
+    """Interactively create ~/.config/dysub/.env."""
+    ensure_config_dir()
+
+    console.print("[bold cyan]DySub 配置向导[/bold cyan]")
+    console.print()
+
+    if DEFAULT_ENV_PATH.exists():
+        console.print(f"[yellow]⚠[/yellow] Config file already exists: {DEFAULT_ENV_PATH}")
+        overwrite = typer.confirm("Overwrite?", default=False)
+        if not overwrite:
+            console.print("Aborted.")
+            raise typer.Exit(0)
+
+    # API Key
+    console.print(
+        "[bold]1. API Key[/bold]\n"
+        "   推荐阿里百炼（DashScope），新用户有免费额度：\n"
+        "   [blue]https://bailian.console.aliyun.com/[/blue]"
+    )
+    api_key = typer.prompt("Enter your ASR API Key", default=settings.asr_api_key or "")
+
+    # Base URL
+    console.print()
+    console.print("[bold]2. ASR Base URL[/bold]")
+    base_url_default = settings.asr_base_url or "https://dashscope.aliyuncs.com/api/v1"
+    base_url = typer.prompt("Base URL", default=base_url_default)
+
+    # Language
+    console.print()
+    console.print("[bold]3. Default Language[/bold]")
+    lang = typer.prompt("Default language", default=settings.default_language or "zh")
+
+    # Format
+    console.print()
+    console.print("[bold]4. Default Output Format[/bold]")
+    fmt = typer.prompt("Default format (srt/vtt/txt)", default=settings.default_format or "srt")
+
+    # Write file
+    content = f"""# DySub 配置文件
+DYSUB_ASR_API_KEY={api_key}
+DYSUB_ASR_BASE_URL={base_url}
+DYSUB_DEFAULT_LANGUAGE={lang}
+DYSUB_DEFAULT_FORMAT={fmt}
+"""
+    DEFAULT_ENV_PATH.write_text(content, encoding="utf-8")
+    DEFAULT_ENV_PATH.chmod(0o600)
+
+    console.print()
+    console.print(f"[green]✓[/green] Config saved to: {DEFAULT_ENV_PATH}")
+    console.print("[dim]Permissions set to 600 (owner read/write only).[/dim]")
+    console.print()
+    console.print("You can now run: [bold]dysub process ./video.mp4 --lang zh[/bold]")
 
 
 @app.command()
