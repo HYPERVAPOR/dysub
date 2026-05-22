@@ -22,6 +22,7 @@ temp/
 *.txt
 *.mp3
 *.mp4
+!tests/assets/*.mp4
 *.wav
 *.aac
 *.m4a
