@@ -1,0 +1,49 @@
+[project]
+name = "dysub"
+version = "0.1.0"
+description = "Local subtitle extraction tool"
+requires-python = ">=3.10"
+dependencies = [
+    "dysub-core",
+    "dysub-input-local",
+    "dysub-input-douyin",
+]
+
+[tool.uv.workspace]
+members = [
+    "packages/dysub-core",
+    "packages/dysub-input-local",
+    "packages/dysub-input-douyin",
+]
+
+[tool.uv.sources]
+dysub-core = { workspace = true }
+dysub-input-local = { workspace = true }
+dysub-input-douyin = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pytest-cov>=5.0",
+    "pytest-httpx>=0.30",
+    "ruff>=0.4",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "UP", "B", "C4", "SIM"]
+ignore = ["B008"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = [
+    "packages/dysub-core/tests",
+    "packages/dysub-input-local/tests",
+    "packages/dysub-input-douyin/tests",
+    "tests",
+]
+addopts = "-v"

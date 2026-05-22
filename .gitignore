@@ -1,0 +1,27 @@
+# Python
+.venv/
+__pycache__/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.coverage
+coverage.xml
+*.pyc
+.DS_Store
+*.log
+
+# Secrets
+.env
+
+# DySub generated files
+outputs/
+temp/
+*.srt
+*.vtt
+*.txt
+*.mp3
+*.mp4
+*.wav
+*.aac
+*.m4a
