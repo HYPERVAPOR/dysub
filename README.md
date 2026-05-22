@@ -56,13 +56,23 @@ ffmpeg -version
 
 ### 安装
 
-```bash
-# 基础功能（本地文件 + CLI）
-pip install dysub-core
+所有包已发布到 PyPI，可直接安装：
 
-# 完整功能（含抖音解析 + WebUI）
-pip install dysub-core dysub-webui dysub-input-douyin
+```bash
+# 一键安装全部功能（推荐）
+pip install dysub
+
+# 或按需安装
+pip install dysub-core              # 核心库 + CLI
+pip install dysub-input-douyin      # 抖音链接解析插件
 ```
+
+| 包名 | 版本 | 说明 |
+|------|------|------|
+| [`dysub`](https://pypi.org/project/dysub/) | 0.1.1 | 统一入口，安装即得全部功能 |
+| [`dysub-core`](https://pypi.org/project/dysub-core/) | 0.1.1 | 核心引擎：音频处理、ASR、字幕合并、CLI |
+| [`dysub-input-local`](https://pypi.org/project/dysub-input-local/) | 0.1.1 | 本地文件输入插件 |
+| [`dysub-input-douyin`](https://pypi.org/project/dysub-input-douyin/) | 0.1.1 | 抖音链接解析插件 |
 
 ### 一分钟上手
 
