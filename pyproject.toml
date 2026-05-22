@@ -14,12 +14,14 @@ members = [
     "packages/dysub-core",
     "packages/dysub-input-local",
     "packages/dysub-input-douyin",
+    "apps/webui",
 ]
 
 [tool.uv.sources]
 dysub-core = { workspace = true }
 dysub-input-local = { workspace = true }
 dysub-input-douyin = { workspace = true }
+dysub-webui = { workspace = true }
 
 [dependency-groups]
 dev = [

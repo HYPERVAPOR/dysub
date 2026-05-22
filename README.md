@@ -59,8 +59,11 @@ ffmpeg -version
 所有包已发布到 PyPI，可直接安装：
 
 ```bash
-# 一键安装全部功能（推荐）
+# 基础功能（CLI + 本地文件 + 抖音插件）
 pip install dysub
+
+# 带 WebUI 界面（推荐桌面用户）
+pip install dysub[webui]
 
 # 或按需安装
 pip install dysub-core              # 核心库 + CLI
@@ -69,7 +72,7 @@ pip install dysub-input-douyin      # 抖音链接解析插件
 
 | 包名 | 版本 | 说明 |
 |------|------|------|
-| [`dysub`](https://pypi.org/project/dysub/) | 0.1.1 | 统一入口，安装即得全部功能 |
+| [`dysub`](https://pypi.org/project/dysub/) | 0.1.1 | 统一入口，`[webui]` extra 可选安装 Gradio 界面 |
 | [`dysub-core`](https://pypi.org/project/dysub-core/) | 0.1.1 | 核心引擎：音频处理、ASR、字幕合并、CLI |
 | [`dysub-input-local`](https://pypi.org/project/dysub-input-local/) | 0.1.1 | 本地文件输入插件 |
 | [`dysub-input-douyin`](https://pypi.org/project/dysub-input-douyin/) | 0.1.1 | 抖音链接解析插件 |
@@ -86,7 +89,7 @@ dysub process ./video.mp4 --lang zh
 # 3. 抖音链接转字幕
 dysub process "https://v.douyin.com/xxxxx" --lang zh
 
-# 4. 启动本地 WebUI
+# 4. 启动本地 WebUI（需先安装 dysub[webui]）
 dysub webui
 # 浏览器访问 http://127.0.0.1:7860
 ```
@@ -205,7 +208,9 @@ dysub/
 │   ├── 📦 dysub-core/              # 核心库：音频处理、ASR、字幕合并、CLI
 │   ├── 📦 dysub-input-local/       # 本地文件输入插件
 │   ├── 📦 dysub-input-douyin/      # 抖音链接解析插件
-│   └── 📦 dysub-webui/             # Gradio 本地 Web 界面
+│   └── 📦 dysub-meta/              # 统一入口 meta 包
+├── 📁 apps/
+│   └── 📦 webui/                   # Gradio 本地 Web 界面
 ├── 📁 tests/                       # 测试与示例资源
 ├── 📁 outputs/                     # 默认字幕输出目录
 ├── 🐳 Dockerfile
@@ -253,12 +258,7 @@ dysub/
 ```bash
 git clone https://github.com/yourname/dysub.git
 cd dysub
-python -m venv .venv
-source .venv/bin/activate
-pip install -e packages/dysub-core \
-            -e packages/dysub-input-local \
-            -e packages/dysub-input-douyin \
-            -e packages/dysub-webui
+uv sync --all-packages          # 安装全部 workspace 包（含 webui）
 pytest
 ```
 
