@@ -7,7 +7,7 @@ packages = ["dysub_input_douyin"]
 
 [project]
 name = "dysub-input-douyin"
-version = "0.1.0"
+version = "0.1.1"
 description = "Douyin input adapter for DySub"
 readme = "README.md"
 license = {text = "MIT"}

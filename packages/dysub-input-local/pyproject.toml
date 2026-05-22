@@ -7,7 +7,7 @@ packages = ["dysub_input_local"]
 
 [project]
 name = "dysub-input-local"
-version = "0.1.0"
+version = "0.1.1"
 description = "Local file input adapter for DySub"
 readme = "README.md"
 license = {text = "MIT"}

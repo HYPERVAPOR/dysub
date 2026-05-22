@@ -236,7 +236,7 @@ dev = [
 
 [[package]]
 name = "dysub-core"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/dysub-core" }
 dependencies = [
     { name = "httpx" },
@@ -274,7 +274,7 @@ provides-extras = ["dev"]
 
 [[package]]
 name = "dysub-input-douyin"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/dysub-input-douyin" }
 dependencies = [
     { name = "dysub-core" },
@@ -285,7 +285,7 @@ requires-dist = [{ name = "dysub-core", editable = "packages/dysub-core" }]
 
 [[package]]
 name = "dysub-input-local"
-version = "0.1.0"
+version = "0.1.1"
 source = { editable = "packages/dysub-input-local" }
 dependencies = [
     { name = "dysub-core" },
