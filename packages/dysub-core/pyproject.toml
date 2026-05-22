@@ -39,5 +39,9 @@ dev = [
     "ruff>=0.4",
 ]
 
+[project.urls]
+Homepage = "https://github.com/HYPERVAPOR/dysub"
+Repository = "https://github.com/HYPERVAPOR/dysub"
+
 [project.scripts]
 dysub = "dysub_core.cli:main"
