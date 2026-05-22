@@ -10,6 +10,9 @@ from dysub_core.config import Settings
 class TestSettings:
     def test_defaults(self, tmp_path: Path, monkeypatch) -> None:
         monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(
+            "dysub_core.config.DEFAULT_ENV_PATH", tmp_path / "nonexistent" / ".env"
+        )
         s = Settings.load()
         assert s.asr_api_key == ""
         assert s.asr_base_url is None

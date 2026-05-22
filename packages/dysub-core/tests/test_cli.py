@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from dysub_core.cli import app
+from dysub_core.config import DEFAULT_ENV_PATH
 from typer.testing import CliRunner
 
 ASSETS = Path(__file__).parents[3] / "tests" / "assets"
@@ -30,6 +31,7 @@ class TestDoctor:
     def test_missing_api_key(self, monkeypatch, tmp_path: Path) -> None:
         monkeypatch.chdir(tmp_path)
         monkeypatch.delenv("DYSUB_ASR_API_KEY", raising=False)
+        monkeypatch.setattr("dysub_core.config.DEFAULT_ENV_PATH", tmp_path / "nonexistent")
         result = runner.invoke(app, ["doctor"])
         assert result.exit_code == 1
         assert "api key" in result.output.lower()
@@ -38,6 +40,7 @@ class TestDoctor:
 class TestProcess:
     def test_missing_api_key(self, monkeypatch, tmp_path: Path) -> None:
         monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr("dysub_core.config.DEFAULT_ENV_PATH", tmp_path / "nonexistent")
         result = runner.invoke(app, ["process", str(SAMPLE_MP4)])
         assert result.exit_code == 1
         assert "ASR API Key" in result.output
@@ -50,7 +53,11 @@ class TestProcess:
         assert result.exit_code == 1
         assert "Unsupported format" in result.output
 
-    def test_success(self, httpx_mock, tmp_path: Path) -> None:
+    def test_success(self, httpx_mock, tmp_path: Path, monkeypatch) -> None:
+        monkeypatch.chdir(tmp_path)
+        monkeypatch.setattr(
+            "dysub_core.config.DEFAULT_ENV_PATH", tmp_path / "nonexistent"
+        )
         httpx_mock.add_response(
             url="https://api.openai.com/v1/audio/transcriptions",
             text="1\n00:00:00,000 --> 00:00:05,000\nHello\n",
