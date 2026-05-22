@@ -5,7 +5,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from dysub_core.cli import app
-from dysub_core.config import DEFAULT_ENV_PATH
 from typer.testing import CliRunner
 
 ASSETS = Path(__file__).parents[3] / "tests" / "assets"
@@ -55,9 +54,7 @@ class TestProcess:
 
     def test_success(self, httpx_mock, tmp_path: Path, monkeypatch) -> None:
         monkeypatch.chdir(tmp_path)
-        monkeypatch.setattr(
-            "dysub_core.config.DEFAULT_ENV_PATH", tmp_path / "nonexistent"
-        )
+        monkeypatch.setattr("dysub_core.config.DEFAULT_ENV_PATH", tmp_path / "nonexistent")
         httpx_mock.add_response(
             url="https://api.openai.com/v1/audio/transcriptions",
             text="1\n00:00:00,000 --> 00:00:05,000\nHello\n",
