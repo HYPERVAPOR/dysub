@@ -28,13 +28,18 @@ jobs:
           pip install -e packages/dysub-input-local
           pip install -e packages/dysub-input-douyin
 
+      - name: Verify installation
+        run: |
+          pip list | grep -E "dysub|pytest|ruff"
+          python -c "import dysub_core; print('dysub-core:', dysub_core.__version__)"
+
       - name: Lint
         run: |
           ruff check packages apps tests
           ruff format --check packages apps tests
 
       - name: Test with coverage
-        run: pytest --cov=dysub_core --cov-report=xml --cov-fail-under=80
+        run: pytest -m "not network" --cov=dysub_core --cov-report=xml --cov-fail-under=80
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
