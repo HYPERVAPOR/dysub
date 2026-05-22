@@ -96,6 +96,12 @@ dysub webui
 
 字幕默认输出到当前目录的 `outputs/` 文件夹。
 
+### 演示
+
+执行一行命令，从抖音链接生成字幕：
+
+![CLI Demo](docs/assets/demo.gif)
+
 ---
 
 ## 🔑 配置 API Key
