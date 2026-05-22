@@ -6,7 +6,6 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 from dysub_core.models import ParserError
-
 from dysub_input_douyin.adapter import DouyinAdapter
 
 
@@ -43,7 +42,7 @@ def _make_router_data(
     }
     import json
 
-    return f'<script>window._ROUTER_DATA = {json.dumps(data, ensure_ascii=False)};</script>'
+    return f"<script>window._ROUTER_DATA = {json.dumps(data, ensure_ascii=False)};</script>"
 
 
 class TestDouyinAdapter:

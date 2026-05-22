@@ -11,7 +11,6 @@ import logging
 import re
 
 import httpx
-
 from dysub_core.inputs.base import BaseInputAdapter
 from dysub_core.models import MediaSource, ParserError
 

@@ -8,7 +8,6 @@ from unittest.mock import MagicMock, patch
 
 import httpx
 import pytest
-
 from dysub_core.models import TaskConfig
 from dysub_core.pipeline import Pipeline
 from dysub_input_douyin.adapter import DouyinAdapter
@@ -46,7 +45,7 @@ def _make_share_page_html(
             }
         }
     }
-    return f'<script>window._ROUTER_DATA = {json.dumps(data, ensure_ascii=False)};</script>'
+    return f"<script>window._ROUTER_DATA = {json.dumps(data, ensure_ascii=False)};</script>"
 
 
 class TestDouyinE2E:
@@ -218,12 +217,21 @@ class TestRealDouyinParsing:
 
         result = subprocess.run(
             [
-                "ffmpeg", "-y",
-                "-headers", header_lines,
-                "-i", source.stream_url,
-                "-vn", "-acodec", "pcm_s16le",
-                "-ar", "16000", "-ac", "1",
-                "-t", "3",
+                "ffmpeg",
+                "-y",
+                "-headers",
+                header_lines,
+                "-i",
+                source.stream_url,
+                "-vn",
+                "-acodec",
+                "pcm_s16le",
+                "-ar",
+                "16000",
+                "-ac",
+                "1",
+                "-t",
+                "3",
                 str(wav_path),
             ],
             capture_output=True,
